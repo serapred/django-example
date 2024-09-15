@@ -1,0 +1,10 @@
+services:
+  sapi-app:
+    build:
+      context: ..
+      dockerfile: docker/dockerfiles/sapi
+    container_name: sapi
+    ports:
+      - '8080:8080'
+    env_file:
+      - envs/sapi.env

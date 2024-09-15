@@ -1,0 +1,11 @@
+# Do not Directly build this file. use .devops/build instead
+
+FROM python:${PYTHON_VERSION}-alpine${ALPINE_VERSION}
+
+WORKDIR /opt/${APP_NAME}
+
+COPY requirements.txt .
+RUN  pip install --no-cache-dir -r requirements.txt
+COPY ${APP_NAME} .
+EXPOSE 8080
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8080"]
