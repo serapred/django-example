@@ -1,0 +1,22 @@
+#!/bin/bash
+
+set -eu
+
+CONTEXT="./docker"
+TEMPLATE_DIR="${CONTEXT}/templates"
+VAR_DIR="${CONTEXT}/vars"
+DST_DIR="${CONTEXT}/dockerfiles"
+COMPOSE_FILE="${CONTEXT}/docker-compose.yml"
+
+# creating destination dir if not present
+mkdir -p "${DST_DIR}" # idempotent
+
+# render template files with var files
+for f in ${TEMPLATE_DIR}/*.template; do
+    name=$(basename "${f}" .template)
+    var_file="${VAR_DIR}/${name}.vars"
+    dst_file="${DST_DIR}/${name}"
+    sh -c "set -a && . ${var_file} && set +a && envsubst < ${f} > ${dst_file}"
+done
+
+docker-compose -f "${COMPOSE_FILE}" build
